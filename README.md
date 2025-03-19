@@ -26,3 +26,10 @@
 ├── .env                  # 환경 변수
 └── Dockerfile            # 컨테이너 설정
 ```
+
+```sql
+CREATE DATABASE goblog;
+CREATE USER 'gouser'@'localhost' IDENTIFIED BY 'gopassword';
+GRANT ALL PRIVILEGES ON goblog.* TO 'gouser'@'localhost';
+FLUSH PRIVILEGES;
+```
