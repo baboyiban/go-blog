@@ -1,10 +1,10 @@
-package handlers_test  // 테스트 전용 패키지
+package handlers_test // 테스트 전용 패키지
 
 import (
-    "net/http"
-    "net/http/httptest"
-    "testing"
-    "go-blog/internal/handlers"
+	"net/http"
+	"net/http/httptest"
+	"testing"
+	"github.com/baboyiban/go-blog/internal/handlers"
 )
 
 func TestGetUser(t *testing.T) {

@@ -1,8 +1,8 @@
 package routes
 
 import (
-    "github.com/gin-gonic/gin"
-    "go-blog/internal/handlers"  // 경로 수정
+	"github.com/baboyiban/go-blog/internal/handlers"
+	"github.com/gin-gonic/gin"
 )
 
 func SetupRouter() *gin.Engine {

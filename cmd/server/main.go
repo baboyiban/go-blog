@@ -1,11 +1,11 @@
 package main
 
 import (
-	"go-blog/internal/database"
-	"go-blog/internal/handlers"
 	"log"
 	"net/http"
 
+	"github.com/baboyiban/go-blog/internal/database"
+	"github.com/baboyiban/go-blog/internal/handlers"
 	_ "github.com/joho/godotenv/autoload"
 )
 

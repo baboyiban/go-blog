@@ -1,3 +1,4 @@
+```markdown
 /go-blog
 ├── cmd/                  # 실행 가능한 애플리케이션
 │   └── server/
@@ -24,3 +25,4 @@
 ├── go.sum
 ├── .env                  # 환경 변수
 └── Dockerfile            # 컨테이너 설정
+```
