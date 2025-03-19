@@ -29,7 +29,7 @@
 
 ```sql
 CREATE DATABASE goblog;
-CREATE USER 'gouser'@'localhost' IDENTIFIED BY 'gopassword';
-GRANT ALL PRIVILEGES ON goblog.* TO 'gouser'@'localhost';
+CREATE USER 'gouser'@'%' IDENTIFIED BY 'gopassword';
+GRANT ALL PRIVILEGES ON goblog.* TO 'gouser'@'%';
 FLUSH PRIVILEGES;
 ```
