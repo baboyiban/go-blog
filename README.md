@@ -1,3 +1,4 @@
+### 폴더 구조
 ```markdown
 /go-blog
 ├── cmd/                  # 실행 가능한 애플리케이션
@@ -27,9 +28,43 @@
 └── Dockerfile            # 컨테이너 설정
 ```
 
+### SQL
 ```sql
 CREATE DATABASE goblog;
 CREATE USER 'gouser'@'%' IDENTIFIED BY 'gopassword';
 GRANT ALL PRIVILEGES ON goblog.* TO 'gouser'@'%';
 FLUSH PRIVILEGES;
+```
+
+### 실행 명령어 (프로젝트 루트에서 실행)
+```bash
+# 전체 서비스 빌드 및 실행 (최초 1회)
+docker-compose up --build
+
+# 백그라운드 실행 (데몬 모드)
+docker-compose up -d
+
+# 실행 중인 컨테이너 확인
+docker-compose ps
+
+# 로그 확인 (app 서비스)
+docker-compose logs -f app
+```
+
+### 접속 테스트
+```bash
+# 컨테이너 정상 실행 확인
+curl http://localhost:8080/users/1
+
+# MySQL 접속 테스트
+docker exec -it go-blog-mysql-1 mysql -uroot -psecret
+```
+
+### 중지 및 정리
+```bash
+# 컨테이너 중지 (데이터 보존)
+docker-compose stop
+
+# 컨테이너 완전 삭제 (데이터 포함 전체 제거)
+docker-compose down -v
 ```
