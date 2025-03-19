@@ -28,14 +28,6 @@
 └── Dockerfile            # 컨테이너 설정
 ```
 
-### SQL
-```sql
-CREATE DATABASE goblog;
-CREATE USER 'gouser'@'%' IDENTIFIED BY 'gopassword';
-GRANT ALL PRIVILEGES ON goblog.* TO 'gouser'@'%';
-FLUSH PRIVILEGES;
-```
-
 ### 실행 명령어 (프로젝트 루트에서 실행)
 ```bash
 # 전체 서비스 빌드 및 실행 (최초 1회)

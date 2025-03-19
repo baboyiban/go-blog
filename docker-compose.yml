@@ -3,24 +3,36 @@ services:
     build: .
     ports:
       - "8080:8080"
+    volumes:
+      - ./web/templates:/app/web/templates
+      - ./web/static:/app/web/static
     environment:
+      - GIN_MODE=debug # 디버그 환경
+      # - GIN_MODE=release # 프로덕션 환경에서는 반드시 이 설정 사용
       - DB_HOST=mysql
       - DB_PORT=3306
-      - DB_USER=root
-      - DB_PASSWORD=secret
+      - DB_USER=gouser
+      - DB_PASSWORD=gopassword
       - DB_NAME=goblog
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
 
   mysql:
     image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: secret
       MYSQL_DATABASE: goblog
-    ports:
-      - "3306:3306"
+      MYSQL_USER: gouser
+      MYSQL_PASSWORD: gopassword
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 10s
+      retries: 10
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
 volumes:
   mysql_data:
