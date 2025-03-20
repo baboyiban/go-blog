@@ -1,21 +1,3 @@
-### 폴더 구조
-```markdown
-/go-blog
-├── cmd/                  # 실행 가능한 애플리케이션
-│   └── server/
-├── internal/             # 비공개 패키지
-│   ├── handlers/         # HTTP 핸들러
-│   ├── models/           # 데이터 모델
-│   ├── middleware/       # 미들웨어
-│   └── database/         # DB 연결
-├── web/                  # 프론트엔드 리소스
-│   └── static/           # 정적 리소스
-│   └── svelte/           # Svelte 프레임워크
-│       └── src/          # 소스 파일
-│       └── static/       # 정적 리소스
-├── api/                  # API 리소스
-```
-
 ### 실행 명령어 (프로젝트 루트에서 실행)
 ```bash
 # 전체 서비스 빌드 및 실행 (최초 1회)
@@ -65,3 +47,11 @@ CSS
 Typescript
 - Jenkins
 ```
+
+**5. 다음 단계 (제안)**
+
+* **API 엔드포인트 개발:** `internal\handlers`, `internal\routes`, `internal\models` 폴더를 사용하여 Go 백엔드 API 엔드포인트를 구현합니다. (예: 게시글 목록 조회, 사용자 정보 조회 등)
+* **데이터베이스 연동:** `internal\database` 패키지를 사용하여 MySQL 데이터베이스와 연동하고, 실제 데이터를 CRUD (생성, 읽기, 수정, 삭제) 하는 기능을 구현합니다.
+* **Svelte 프론트엔드 개발:** `web\svelte\src` 폴더에서 Svelte 컴포넌트 및 페이지를 개발하여 사용자 인터페이스를 구축하고, Go 백엔드 API를 호출하여 데이터를 표시하고 상호작용하는 기능을 구현합니다.
+* **테스트 작성:** `internal\handlers\user_test.go` 와 같이 Go 백엔드 핸들러에 대한 단위 테스트를 작성하여 코드의 안정성을 높입니다. Svelte 프론트엔드 컴포넌트에 대한 테스트도 작성하는 것을 고려해보세요.
+* **배포:** Docker 이미지를 컨테이너 레지스트리 (Docker Hub, GCR, ECR 등) 에 푸시하고, 클라우드 플랫폼 (AWS, GCP, Azure 등) 또는 서버 환경에 배포합니다.

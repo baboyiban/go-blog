@@ -1,29 +1,30 @@
-# Stage 1: Build Go Backend
-FROM golang:1.24-alpine3.21 AS go-builder
+# Dockerfile
+# Stage 1: Build Frontend
+FROM oven/bun:1.2.5 as frontend-builder
+WORKDIR /app/frontend
+COPY frontend/package.json frontend/bun.lockb ./
+RUN bun install
+COPY frontend .
+RUN bun run build
+
+# Stage 2: Build Backend
+FROM golang:1.24-alpine as backend-builder
 WORKDIR /app
-COPY go.mod go.sum ./
+COPY backend/go.* ./
 RUN go mod download
-COPY . .
-RUN CGO_ENABLED=0 GOOS=linux go build -o /go-blog ./cmd/server/main.go
+COPY backend .
+RUN CGO_ENABLED=0 GOOS=linux go build -o /app/server ./cmd/server/main.go
 
-# Stage 2: Build Svelte Frontend
-FROM node:20-alpine AS svelte-builder
-WORKDIR /app
-COPY web/svelte/package*.json ./web/svelte/
-RUN cd web/svelte && npm install
-COPY web/svelte ./web/svelte
-RUN cd web/svelte && npm run build
-
-# Stage 3: Runtime Image
+# Stage 3: Final Runtime
 FROM alpine:3.21
 RUN apk add --no-cache ca-certificates tzdata
 WORKDIR /app
 
-# Copy Go Binary
-COPY --from=go-builder /go-blog .
+# Copy backend binary
+COPY --from=backend-builder /app/server ./
 
-# Copy Svelte Build Output
-COPY --from=svelte-builder /app/web/svelte/public ./web/static
+# Copy frontend build output
+COPY --from=frontend-builder /app/frontend/build /app/web/static
 
 EXPOSE 8080
-ENTRYPOINT ["/app/go-blog"]
+CMD ["/app/server"]

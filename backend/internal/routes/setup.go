@@ -3,8 +3,6 @@ package routes
 import (
 	"database/sql"
 
-	"github.com/baboyiban/go-blog/internal/handlers"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,7 +18,7 @@ func SetupRouter(db *sql.DB) *gin.Engine {
 	})
 
 	// 3. API 라우트 설정
-	router.GET("/api/posts", handlers.GetPosts)
+	// router.GET("/api/posts", handlers.GetPosts)
 
 	return router
 }
