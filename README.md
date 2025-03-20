@@ -60,3 +60,14 @@ docker-compose stop
 # 컨테이너 완전 삭제 (데이터 포함 전체 제거)
 docker-compose down -v
 ```
+
+### 기술스택
+```markdown
+Go
+Docker
+SQL
+HTML
+CSS
+Typescript
+- Jenkins
+```
