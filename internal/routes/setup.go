@@ -2,30 +2,25 @@ package routes
 
 import (
 	"database/sql"
-	"net/http"
+
+	"github.com/baboyiban/go-blog/internal/handlers"
 
 	"github.com/gin-gonic/gin"
-	"github.com/gin-gonic/gin/render"
 )
 
 func SetupRouter(db *sql.DB) *gin.Engine {
 	router := gin.Default()
 
-	// HTML 템플릿 자동 리로드 설정
-	router.HTMLRender = &render.HTMLDebug{
-		Glob: "web/templates/*.html",
-	}
+	// 1. Svelte 빌드 결과물 서빙
+	router.Static("/static", "./web/static")
 
-	// 정적 파일 서빙 설정 추가
-	router.Static("/static", "web/static")
-
-	// 기존 라우트 설정...
-	router.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.html", gin.H{
-			"Title":   "Go Blog",
-			"Message": "Welcome to Go Blog!",
-		})
+	// 2. SPA 라우팅 처리 (모든 미등록 경로는 index.html로)
+	router.NoRoute(func(c *gin.Context) {
+		c.File("./web/static/index.html")
 	})
+
+	// 3. API 라우트 설정
+	router.GET("/api/posts", handlers.GetPosts)
 
 	return router
 }

@@ -1,14 +1,12 @@
+version: "3.8"
+
 services:
   app:
     build: .
     ports:
       - "8080:8080"
-    volumes:
-      - ./web/templates:/app/web/templates
-      - ./web/static:/app/web/static
     environment:
-      - GIN_MODE=debug # 디버그 환경
-      # - GIN_MODE=release # 프로덕션 환경에서는 반드시 이 설정 사용
+      - GIN_MODE=release
       - DB_HOST=mysql
       - DB_PORT=3306
       - DB_USER=gouser
@@ -32,7 +30,6 @@ services:
       retries: 10
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
 volumes:
   mysql_data:

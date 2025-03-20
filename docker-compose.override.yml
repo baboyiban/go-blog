@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  app:
+    build: .
+    environment:
+      - GIN_MODE=debug
+    volumes:
+      - .:/app # Go 코드 변경 감지
+      - ./web/svelte/public:/app/web/static # Svelte 빌드 결과 동기화
+    command: sh -c "go run cmd/server/main.go" # Go 핫 리로드
+
+  svelte-dev: # 프론트엔드 개발 서버
+    image: node:20-alpine
+    ports:
+      - "5173:5173"
+    working_dir: /app/web/svelte
+    volumes:
+      - ./web/svelte:/app/web/svelte
+    command: sh -c "npm install && npm run dev"
