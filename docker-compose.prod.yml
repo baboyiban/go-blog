@@ -3,8 +3,8 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    ports:
-      - "8080:8080"
+    # ports:
+    #   - "8080:8080" # 필요하면 이 포트는 내부에서만 사용하도록 제거
     environment:
       - GIN_MODE=release
       - DB_HOST=mysql
@@ -20,11 +20,22 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
+    # ports:  # 필요하면 이 포트는 내부에서만 사용하도록 제거
+    #   - "3000:3000"
     environment:
       - NODE_ENV=production
-      - VITE_API_URL=http://localhost:8080
+      - VITE_API_URL=/api
+    restart: unless-stopped
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - "80:80" # HTTP 표준 포트
+    depends_on:
+      - frontend
+      - backend
     restart: unless-stopped
 
   mysql:
