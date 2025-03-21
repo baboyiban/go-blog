@@ -1,6 +1,0 @@
-.git
-.gitignore
-.env
-*.md
-/tmp
-/vendor
