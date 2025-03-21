@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   backend:
     build:
@@ -14,7 +12,7 @@ services:
       - DB_PASSWORD=gopassword
       - DB_NAME=goblog
     volumes:
-      - ./backend:/app # 개발 시 소스 코드 변경 감지
+      - ./backend:/app
     depends_on:
       mysql:
         condition: service_healthy
@@ -26,7 +24,7 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - ./frontend:/app # 개발 시 소스 코드 변경 감지
+      - ./frontend:/app
       - /app/node_modules
     environment:
       - NODE_ENV=development
