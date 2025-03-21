@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: certbot
+  namespace: go-blog
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: certbot
+  template:
+    metadata:
+      labels:
+        app: certbot
+    spec:
+      containers:
+        - name: certbot
+          image: certbot/certbot
+          volumeMounts:
+            - name: certbot-www
+              mountPath: /var/www/certbot
+            - name: certbot-conf
+              mountPath: /etc/letsencrypt
+          command:
+            [
+              "/bin/sh",
+              "-c",
+              "trap exit TERM; while :; do certbot renew; sleep 24h & wait $${!}; done;",
+            ]
+      volumes:
+        - name: certbot-www
+          persistentVolumeClaim:
+            claimName: certbot-www-pvc
+        - name: certbot-conf
+          persistentVolumeClaim:
+            claimName: certbot-conf-pvc
