@@ -21,7 +21,10 @@ WORKDIR /app
 
 # Copy package.json and built assets
 COPY --from=builder /app/package.json ./
-COPY --from=builder /app/build ./build
+COPY --from=builder /app/dist ./dist
+
+# Install serve package
+RUN bun add serve
 
 EXPOSE 3000
 CMD ["bun", "run", "start"]
