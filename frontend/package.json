@@ -1,0 +1,16 @@
+{
+  "name": "starry-star",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "start": "serve -s dist"
+  },
+  "dependencies": {
+    "astro": "^5.5.3",
+    "serve": "^14.2.4"
+  }
+}
