@@ -52,12 +52,12 @@ Let's Encrypt에서 SSL 인증서를 발급받기 위해 `certbot`을 사용합�
 
 2. 인증서를 발급받습니다.
    ```bash
-   sudo certbot certonly --standalone -d example.com
+   sudo certbot certonly --standalone -d choidaruhan.xyz
    ```
-   - `example.com`을 실제 도메인으로 변경하세요.
+   - `choidaruhan.xyz`을 실제 도메인으로 변경하세요.
    - 이 명령어는 도메인의 80번 포트를 사용하여 인증서를 발급받습니다.
 
-3. 발급된 인증서는 `/etc/letsencrypt/live/example.com/` 경로에 저장됩니다.
+3. 발급된 인증서는 `/etc/letsencrypt/live/choidaruhan.xyz/` 경로에 저장됩니다.
 
 ### Certbot 자동 갱신 설정:
 ```bash
@@ -80,7 +80,7 @@ sudo certbot renew --dry-run
 
 ### 인증서 발급 명령어:
 ```bash
-docker-compose -f docker-compose.prod.yml run --rm certbot certonly --webroot --webroot-path /var/www/certbot -d example.com
+docker-compose -f docker-compose.prod.yml run --rm certbot certonly --webroot --webroot-path /var/www/certbot -d choidaruhan.xyz
 ```
 
 ### Nginx 재시작
@@ -93,4 +93,11 @@ docker-compose -f docker-compose.prod.yml restart nginx
 갱신이 정상적으로 동작하는지 테스트하려면 다음 명령어를 실행하세요:
 ```bash
 docker-compose -f docker-compose.prod.yml run --rm certbot certbot renew --dry-run
+```
+
+## 포트 설정
+```bash
+sudo ufw allow 80
+sudo ufw allow 443
+sudo ufw enable
 ```
