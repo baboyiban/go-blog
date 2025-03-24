@@ -59,8 +59,9 @@ services:
       - .env
     environment:
       - DOMAIN=${DOMAIN}
+      - EMAIL=${EMAIL}
     entrypoint: >
-      /bin/sh -c "envsubst '$$DOMAIN' < /etc/nginx/conf.d/nginx.conf.template > /etc/nginx/conf.d/nginx.conf && nginx -g 'daemon off;'"
+      /bin/sh -c "envsubst '$$DOMAIN $$EMAIL' < /etc/nginx/conf.d/nginx.conf > /etc/nginx/conf.d/nginx.conf && nginx -g 'daemon off;'"
     networks:
       - go-blog-network
     depends_on:
@@ -80,10 +81,6 @@ services:
 
 volumes:
   mysql-data:
-    driver: local
-  letsencrypt-data:
-    driver: local
-  certbot-webroot:
     driver: local
 
 networks:

@@ -17,16 +17,18 @@ sudo install minikube-linux-amd64 /usr/local/bin/minikube
 ```
 
 ### Docker Compose
-1. `docker-compose.yml` 파일이 있는 디렉토리로 이동합니다.
-2. 다음 명령어를 실행하여 모든 서비스를 빌드하고 실행합니다:
-   ```bash
-   docker-compose up --build
+#### 사용 방법
+1. `.env` 파일에 `DOMAIN`과 `EMAIL`을 설정합니다.
+2. 초기 인증서 발급을 위해 아래 명령어를 실행합니다.
+```sh
+docker-compose -f docker-compose.initial.yml up -d
+```
+3. 인증서가 정상적으로 발급되면 컨테이너를 중지합니다.
+```sh
+docker-compose -f docker-compose.initial.yml down
+```
+4. 초기 인증서 발급이 완료된 후, 아래 명령어로 운영 환경을 시작합니다.
+   ```sh
+   docker-compose up -d
    ```
-3. 서비스를 중지하려면:
-   ```bash
-   docker-compose down
-   ```
-4. 볼륨을 포함하여 모든 리소스를 삭제하려면:
-   ```bash
-   docker-compose down -v
-   ```
+5. Certbot은 자동으로 인증서를 갱신합니다.

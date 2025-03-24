@@ -29,6 +29,15 @@ docker logs go-blog-certbot
 
 ---
 
+### 결과 확인
+Nginx 컨테이너 내부에서 생성된 `nginx.conf` 파일을 확인하여 변수가 정상적으로 대체되었는지 확인합니다.
+
+```sh
+docker exec -it go-blog-nginx cat /etc/nginx/conf.d/nginx.conf
+```
+
+---
+
 ### 요약
 - 초기 인증서 발급은 수동으로 진행 (`docker exec` 명령어 사용).
 - 갱신은 `certbot` 컨테이너가 자동으로 처리.
