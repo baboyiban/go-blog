@@ -29,4 +29,4 @@ Thumbs.db
 coverage/
 
 # SSL 인증서 파일
-cert/
+certs/
