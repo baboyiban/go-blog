@@ -1,5 +1,4 @@
-
-## 포트 설정
+#### 포트 설정
 ```bash
 sudo ufw allow 80
 sudo ufw allow 443
