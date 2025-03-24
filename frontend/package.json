@@ -10,7 +10,7 @@
     "start": "serve -s dist"
   },
   "dependencies": {
-    "astro": "^5.5.3",
+    "astro": "^5.5.4",
     "serve": "^14.2.4"
   }
 }
