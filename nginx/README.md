@@ -19,7 +19,10 @@ Let's Encrypt에서 SSL 인증서를 발급받기 위해 `certbot`을 사용합�
 
 ### Certbot 자동 갱신 설정:
 ```bash
+# 테스트
 sudo certbot renew --dry-run
+
+cat /etc/cron.d/certbot
 ```
 
 ### 자체 서명된 SSL 인증서 생성:
