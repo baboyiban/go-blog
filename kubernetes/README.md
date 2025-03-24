@@ -1,3 +1,5 @@
+## 사전준비
+
 ### MacOS & Linux
 ```bash
 ## MacOS & Linux
@@ -17,8 +19,6 @@ dos2unix delete.sh
 ./delete.sh
 ```
 
-
-
 ### Windows
 ```powershell
 # 실행 정책 변경
@@ -34,14 +34,64 @@ Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
 ./delete.ps1
 ```
 
-### Cert-Manager 설치
+
+
+## 설치 및 사용
+
+### Docker 설치
+먼저, 시스템에 Docker를 설치해야 합니다. 대부분의 Linux 배포판에서 Docker를 설치할 수 있습니다.
+
+#### Ubuntu/Debian 기반 시스템:
 ```bash
-kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.13.0/cert-manager.yaml
+# 패키지 목록 업데이트
+sudo apt-get update
+
+# 필요한 패키지 설치
+sudo apt-get install apt-transport-https ca-certificates curl software-properties-common
+
+# Docker의 공식 GPG 키 추가
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+
+# Docker 저장소 추가
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+
+# 패키지 목록 다시 업데이트
+sudo apt-get update
+
+# Docker CE (Community Edition) 설치
+sudo apt-get install docker-ce
 ```
 
-### 사용 방법
+#### CentOS/RHEL 기반 시스템:
+```bash
+# 필요한 패키지 설치
+sudo yum install -y yum-utils device-mapper-persistent-data lvm2
 
-#### Minikube 설치 및 실행 (로컬 환경)
+# Docker 저장소 추가
+sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+
+# Docker CE 설치
+sudo yum install docker-ce
+```
+
+#### Docker 서비스 시작 및 활성화
+Docker를 설치한 후, Docker 서비스를 시작하고 시스템 부팅 시 자동으로 시작되도록 설정합니다.
+
+```bash
+# Docker 서비스 시작
+sudo systemctl start docker
+
+# Docker 서비스 활성화 (시스템 부팅 시 자동 시작)
+sudo systemctl enable docker
+```
+
+#### 사용자에게 Docker 권한 부여
+```bash
+sudo usermod -aG docker $USER
+newgrp docker
+```
+
+### Minikube 설치 및 실행 (로컬 환경)
 ```bash
 # Minikube 설치
 curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
@@ -102,3 +152,7 @@ kubectl delete -f service.yaml
 ```bash
 kubectl apply --dry-run=client -f mysql-deployment.yaml
 ```
+
+### Cert-Manager 설치
+```bash
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.13.0/cert-manager.yaml

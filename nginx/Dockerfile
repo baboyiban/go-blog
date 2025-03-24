@@ -8,8 +8,8 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 # nginx.conf 파일은 Nginx의 기본 설정 파일로, 이 파일을 덮어쓰면 사용자 정의 설정이 적용됩니다.
 
 # Let's Encrypt 인증서 복사
-COPY /etc/letsencrypt/live/choidaruhan.xyz/fullchain.pem /etc/nginx/certs/cert.pem
-COPY /etc/letsencrypt/live/choidaruhan.xyz/privkey.pem /etc/nginx/certs/key.pem
+COPY fullchain.pem /etc/nginx/certs/cert.pem
+COPY privkey.pem /etc/nginx/certs/key.pem
 # cert.pem: SSL 인증서 파일
 # key.pem: SSL 키 파일
 # 이 파일들은 HTTPS 통신을 위해 사용됩니다.
