@@ -14,11 +14,6 @@ if [ -z "$DOMAIN" ] || [ -z "$EMAIL" ]; then
     exit 1
 fi
 
-# 초기 인증서 발급
-if [ ! -f /etc/letsencrypt/live/${DOMAIN}/fullchain.pem ]; then
-  certbot certonly --webroot --webroot-path /var/www/certbot --email ${EMAIL} --agree-tos --no-eff-email -d ${DOMAIN}
-fi
-
 # 인증서 갱신 스케줄링
 while :; do
   certbot renew --quiet
