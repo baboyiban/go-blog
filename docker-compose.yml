@@ -1,41 +1,6 @@
 version: "3.8"
 
 services:
-  # 초기 인증서 발급을 위한 Nginx
-  nginx-initial:
-    image: nginx:latest
-    container_name: go-blog-nginx-initial
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx/conf.d/nginx.initial.conf:/etc/nginx/conf.d/nginx.conf.template
-      - ./certbot/www:/var/www/certbot
-    environment:
-      - DOMAIN=${DOMAIN}
-      - EMAIL=${EMAIL}
-    entrypoint: >
-      /bin/sh -c "envsubst '$$DOMAIN $$EMAIL' < /etc/nginx/conf.d/nginx.conf.template > /etc/nginx/conf.d/nginx.conf && nginx -g 'daemon off;'"
-    networks:
-      - go-blog-network
-    restart: unless-stopped
-
-  # 초기 인증서 발급을 위한 Certbot
-  certbot-initial:
-    image: certbot/certbot:latest
-    container_name: go-blog-certbot-initial
-    volumes:
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
-    env_file:
-      - .env
-    command: certonly --webroot --webroot-path /var/www/certbot --email ${EMAIL} --agree-tos --no-eff-email -d ${DOMAIN}
-    networks:
-      - go-blog-network
-    depends_on:
-      - nginx-initial
-    restart: unless-stopped
-
-  # 애플리케이션 백엔드
   backend:
     build: ./backend
     container_name: go-blog-backend
@@ -50,7 +15,6 @@ services:
     networks:
       - go-blog-network
 
-  # 애플리케이션 프론트엔드
   frontend:
     build: ./frontend
     container_name: go-blog-frontend
@@ -63,7 +27,6 @@ services:
     networks:
       - go-blog-network
 
-  # 데이터베이스
   mysql:
     build: ./mysql
     container_name: go-blog-mysql
@@ -82,7 +45,6 @@ services:
     networks:
       - go-blog-network
 
-  # 애플리케이션 Nginx
   nginx:
     image: nginx:latest
     container_name: go-blog-nginx
@@ -101,19 +63,12 @@ services:
       - EMAIL=${EMAIL}
     entrypoint: >
       /bin/sh -c "envsubst '$$DOMAIN $$EMAIL' < /etc/nginx/conf.d/nginx.conf.template > /etc/nginx/conf.d/nginx.conf && nginx -g 'daemon off;'"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-      start_period: 30s
     networks:
       - go-blog-network
     depends_on:
-      - certbot-initial
+      - certbot
     restart: unless-stopped
 
-  # Certbot 인증서 갱신
   certbot:
     image: certbot/certbot:latest
     container_name: go-blog-certbot

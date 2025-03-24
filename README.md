@@ -16,19 +16,20 @@ curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-
 sudo install minikube-linux-amd64 /usr/local/bin/minikube
 ```
 
-### Docker Compose
-#### 사용 방법
-1. `.env` 파일에 `DOMAIN`과 `EMAIL`을 설정합니다.
-2. 초기 인증서 발급을 위해 아래 명령어를 실행합니다.
-```sh
+### 실행 순서 (docker-compose)
+
+#### **1단계: 초기 인증서 발급**
+```bash
 docker-compose -f docker-compose.initial.yml up -d
 ```
-3. 인증서가 정상적으로 발급되면 컨테이너를 중지합니다.
-```sh
+
+- `nginx-initial`과 `certbot-initial`이 실행되어 초기 인증서를 발급합니다.
+- 인증서 발급이 완료되면 `nginx-initial` 컨테이너를 종료합니다:
+```bash
 docker-compose -f docker-compose.initial.yml down
 ```
-4. 초기 인증서 발급이 완료된 후, 아래 명령어로 운영 환경을 시작합니다.
-   ```sh
-   docker-compose up -d
-   ```
-5. Certbot은 자동으로 인증서를 갱신합니다.
+
+#### **2단계: 애플리케이션 실행**
+```bash
+docker-compose up -d
+```
