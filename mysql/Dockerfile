@@ -1,6 +1,5 @@
-FROM mysql:8.0
+FROM mysql:8.0-debian
 
-# 타임존 데이터 설치
 RUN apt-get update && apt-get install -y tzdata && rm -rf /var/lib/apt/lists/*
 
 # 초기화 스크립트 복사
