@@ -2,6 +2,9 @@ package routes
 
 import (
 	"database/sql"
+	"net/http/httputil"
+	"net/url"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -18,22 +21,37 @@ func SetupRouter(db *sql.DB) *gin.Engine {
 		// 다른 API 엔드포인트들...
 	}
 
-	// 2. SvelteKit 애플리케이션을 위한 프록시 설정
-	// 개발 환경
+	// 2. 개발/프로덕션 모드 분기
 	if gin.Mode() != gin.ReleaseMode {
-		// Vite dev 서버로 프록시
-		router.Any("/*path", func(c *gin.Context) {
-			// Vite dev 서버로 프록시
-			// TODO: 프록시 구현
-		})
+		setupDevProxy(router) // 개발 모드 프록시 설정
 	} else {
-		// 프로덕션 환경
-		// SvelteKit의 빌드된 SSR 핸들러로 요청 전달
-		router.Static("/static", "./web/static")
-		router.NoRoute(func(c *gin.Context) {
-			// TODO: SvelteKit SSR 핸들러 연동
-		})
+		setupProductionRoutes(router) // 프로덕션 라우트 설정
 	}
 
 	return router
+}
+
+func setupDevProxy(router *gin.Engine) {
+    target, _ := url.Parse("http://frontend:4321") // 프론트엔드 포트 일치 확인
+    proxy := httputil.NewSingleHostReverseProxy(target)
+
+    router.NoRoute(func(c *gin.Context) {
+        // 헤더 설정 추가
+        c.Request.Header.Set("X-Forwarded-Host", c.Request.Host)
+        proxy.ServeHTTP(c.Writer, c.Request)
+    })
+}
+
+func setupProductionRoutes(router *gin.Engine) {
+	// 정적 파일 서빙 설정
+	router.Static("/static", "./web/static")
+
+	// SPA Fallback 처리
+	router.NoRoute(func(c *gin.Context) {
+		c.File("./web/index.html")
+	})
+}
+
+func isAPIRequest(path string) bool {
+	return strings.HasPrefix(path, "/api")
 }

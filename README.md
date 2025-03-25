@@ -43,20 +43,15 @@ curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-
 sudo install minikube-linux-amd64 /usr/local/bin/minikube
 ```
 
-### 실행 순서 (docker-compose)
-
-#### **1단계: 초기 인증서 발급**
+#### 개발 및 배포
 ```bash
-docker-compose -f docker-compose.initial.yml up -d
-```
-
-- `nginx-initial`과 `certbot-initial`이 실행되어 초기 인증서를 발급합니다.
-- 인증서 발급이 완료되면 `nginx-initial` 컨테이너를 종료합니다:
-```bash
-docker-compose -f docker-compose.initial.yml down
-```
-
-#### **2단계: 애플리케이션 실행**
-```bash
-docker-compose up -d
+# 개발 환경
+docker-compose -f docker-compose.dev.yml up --build
+# 프로덕션 환경
+docker-compose up -d --build
+# 삭제
+docker container prune
+docker image prune -a
+docker volume prune
+docker builder prune --all
 ```

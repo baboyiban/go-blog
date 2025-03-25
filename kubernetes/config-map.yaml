@@ -1,6 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: go-blog-config
-data:
-  APP_ENV: production

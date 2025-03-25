@@ -1,6 +1,9 @@
+version: "3.8"
+
 services:
   backend:
-    build: ./backend
+    build:
+      context: ./backend
     container_name: go-blog-backend
     expose:
       - "8080"
@@ -16,9 +19,12 @@ services:
       - "traefik.http.services.backend.loadbalancer.server.port=8080"
     networks:
       - go-blog-network
+    depends_on:
+      - mysql
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
     container_name: go-blog-frontend
     expose:
       - "3000"
@@ -40,11 +46,6 @@ services:
       - "3306"
     env_file:
       - .env
-    environment:
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     volumes:
       - mysql-data:/var/lib/mysql
     networks:
@@ -53,10 +54,8 @@ services:
   traefik:
     image: traefik:v2.10
     container_name: go-blog-traefik
-    env_file: .env
     command:
-      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
-      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      - "--api.dashboard=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
@@ -64,7 +63,6 @@ services:
       - "--certificatesresolvers.myresolver.acme.email=${EMAIL}"
       - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
       - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
-      - "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory" # staging 서버 추가
     ports:
       - "80:80"
       - "443:443"
@@ -73,14 +71,11 @@ services:
       - ./letsencrypt:/letsencrypt
     networks:
       - go-blog-network
-    restart: unless-stopped
 
 volumes:
   mysql-data:
     driver: local
-  letsencrypt-data:
-    driver: local
-  certbot-webroot:
+  letsencrypt:
     driver: local
 
 networks:
