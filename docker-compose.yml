@@ -2,7 +2,6 @@ services:
   backend:
     build:
       context: ./backend
-      dockerfile: frontend/Dockerfile
       args:
         DOMAIN: ${DOMAIN}
     container_name: go-blog-backend
@@ -27,7 +26,6 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: frontend/Dockerfile
     container_name: go-blog-frontend
     expose:
       - "3000"

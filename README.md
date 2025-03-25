@@ -33,8 +33,10 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
 # Docker 설치 확인
 sudo docker run hello-world
 # sudo 없이 사용하기
+sudo groupadd docker
 sudo usermod -aG docker $USER
 newgrp docker  # 그룹 변경 적용 (또는 재로그인)
+sudo systemctl restart docker
 # docker-compose 설치
 sudo apt-get install docker-compose-plugin
 
