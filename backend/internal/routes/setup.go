@@ -32,14 +32,14 @@ func SetupRouter(db *sql.DB) *gin.Engine {
 }
 
 func setupDevProxy(router *gin.Engine) {
-    target, _ := url.Parse("http://frontend:4321") // 프론트엔드 포트 일치 확인
-    proxy := httputil.NewSingleHostReverseProxy(target)
+	target, _ := url.Parse("http://frontend:3000") // 프론트엔드 포트 일치 확인
+	proxy := httputil.NewSingleHostReverseProxy(target)
 
-    router.NoRoute(func(c *gin.Context) {
-        // 헤더 설정 추가
-        c.Request.Header.Set("X-Forwarded-Host", c.Request.Host)
-        proxy.ServeHTTP(c.Writer, c.Request)
-    })
+	router.NoRoute(func(c *gin.Context) {
+		// 헤더 설정 추가
+		c.Request.Header.Set("X-Forwarded-Host", c.Request.Host)
+		proxy.ServeHTTP(c.Writer, c.Request)
+	})
 }
 
 func setupProductionRoutes(router *gin.Engine) {

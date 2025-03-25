@@ -4,7 +4,7 @@ WORKDIR /app
 COPY package.json bun.lock ./
 RUN bun install
 COPY . .
-EXPOSE 4321
+EXPOSE 3000
 CMD bun run dev --host
 
 # 프로덕션 빌드

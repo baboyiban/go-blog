@@ -20,13 +20,13 @@ services:
       target: dev
     container_name: go-blog-frontend-dev
     ports:
-      - "4321:4321"
+      - "3000:3000"
     volumes:
       - ./frontend:/app
       - /app/node_modules
     environment:
       - NODE_ENV=development
-      - ASTRO_PORT=4321
+      - ASTRO_PORT=3000
       - HOST=0.0.0.0 # 모든 네트워크 인터페이스에 바인딩
     depends_on:
       - backend
