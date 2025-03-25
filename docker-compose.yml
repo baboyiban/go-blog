@@ -40,14 +40,6 @@ services:
       - "traefik.http.services.frontend.loadbalancer.server.port=3000"
     networks:
       - go-blog-network
-    deploy:
-      resources:
-        limits:
-          cpus: "0.5"
-          memory: 512M
-        reservations:
-          cpus: "0.25"
-          memory: 256M
 
   mysql:
     build: ./mysql

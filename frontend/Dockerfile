@@ -11,7 +11,6 @@ CMD bun run dev --host
 FROM oven/bun:1.2.5 AS builder
 WORKDIR /app
 COPY package.json bun.lock ./
-COPY ../.env .
 RUN bun install
 COPY . .
 RUN bun run build

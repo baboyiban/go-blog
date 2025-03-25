@@ -3,8 +3,4 @@ import { config } from "dotenv";
 
 config();
 
-export default defineConfig({
-  build: {
-    assetsPrefix: `https://cdn.${process.env.DOMAIN ?? "localhost"}`,
-  },
-});
+export default defineConfig({});
