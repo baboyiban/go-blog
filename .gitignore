@@ -5,6 +5,7 @@ bun.lockb
 # 빌드 결과물
 dist/
 build/
+.astro/
 
 # 환경 변수 파일
 .env
@@ -26,3 +27,6 @@ Thumbs.db
 
 # 테스트 결과물
 coverage/
+
+# SSL 인증서 파일
+certs/
