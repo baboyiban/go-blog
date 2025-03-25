@@ -49,6 +49,9 @@ sudo install minikube-linux-amd64 /usr/local/bin/minikube
 docker-compose -f docker-compose.dev.yml up --build
 # 프로덕션 환경
 docker-compose up -d --build
+# 로그
+docker-compose logs -f
+
 # 삭제
 docker container prune
 docker image prune -a

@@ -38,6 +38,14 @@ services:
       - "traefik.http.services.frontend.loadbalancer.server.port=3000"
     networks:
       - go-blog-network
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+        reservations:
+          cpus: "0.25"
+          memory: 256M
 
   mysql:
     build: ./mysql
@@ -60,9 +68,11 @@ services:
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
-      - "--certificatesresolvers.myresolver.acme.email=${EMAIL}"
-      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
       - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
+      # - "--certificatesresolvers.myresolver.acme.email=${EMAIL}" # 테스트
+      # - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json" # 테스트
+      - "--certificatesresolvers.myresolver.acme.email=${EMAIL}" # 배포
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json" # 배포
     ports:
       - "80:80"
       - "443:443"

@@ -10,7 +10,9 @@
     "start": "serve -s dist"
   },
   "dependencies": {
+    "@types/node": "^22.13.13",
     "astro": "^5.5.4",
+    "dotenv": "^16.4.7",
     "serve": "^14.2.4"
   }
 }
