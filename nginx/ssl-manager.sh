@@ -3,9 +3,19 @@
 # 초기 대기 시간
 sleep 30
 
-# 도메인 설정 (실제 도메인으로 변경 필요)
-DOMAIN="choidaruhan.xyz"
-EMAIL="chl11wq12@gmail.com"
+# 환경 변수 불러오기 (상위 폴더의 .env 파일을 참조)
+if [ -f ../.env ]; then
+    export $(cat ../.env | xargs)
+else
+    echo "$(date): .env 파일을 찾을 수 없습니다."
+    exit 1
+fi
+
+# 환경 변수가 설정되었는지 확인
+if [ -z "$DOMAIN" ] || [ -z "$EMAIL" ]; then
+    echo "$(date): DOMAIN 또는 EMAIL 환경 변수가 설정되지 않았습니다."
+    exit 1
+fi
 
 # 인증서 없으면 초기 발급
 if [ ! -d "/etc/letsencrypt/live/$DOMAIN" ]; then
