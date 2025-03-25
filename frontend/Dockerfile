@@ -12,6 +12,8 @@ FROM oven/bun:1.2.5 AS builder
 WORKDIR /app
 COPY package.json bun.lock ./
 RUN bun install
+ARG DOMAIN
+ENV DOMAIN=$DOMAIN
 COPY . .
 RUN bun run build
 

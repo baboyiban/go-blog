@@ -1,6 +1,9 @@
 import { defineConfig } from "astro/config";
-import { config } from "dotenv";
 
-config();
-
-export default defineConfig({});
+export default defineConfig({
+  build: {
+    assetsPrefix: process.env.DOMAIN
+      ? `https://cdn.${process.env.DOMAIN}`
+      : "/_astro", // ← 개발 환경 폴백
+  },
+});
