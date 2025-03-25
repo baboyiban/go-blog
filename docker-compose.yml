@@ -73,9 +73,14 @@ services:
       - ./letsencrypt:/letsencrypt
     networks:
       - go-blog-network
+    restart: unless-stopped
 
 volumes:
   mysql-data:
+    driver: local
+  letsencrypt-data:
+    driver: local
+  certbot-webroot:
     driver: local
 
 networks:
