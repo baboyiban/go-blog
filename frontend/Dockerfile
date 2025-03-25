@@ -14,8 +14,6 @@ COPY package.json bun.lock ./
 COPY ../.env .
 RUN bun install
 COPY . .
-ARG DOMAIN
-ENV DOMAIN=$DOMAIN
 RUN bun run build
 
 # 프로덕션 런타임
