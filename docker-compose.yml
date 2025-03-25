@@ -10,8 +10,12 @@ services:
       - GIN_MODE=release
     env_file:
       - .env
-    depends_on:
-      - mysql
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.backend.rule=Host(`${DOMAIN}`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.backend.entrypoints=websecure"
+      - "traefik.http.routers.backend.tls.certresolver=myresolver"
+      - "traefik.http.services.backend.loadbalancer.server.port=8080"
     networks:
       - go-blog-network
 
@@ -22,8 +26,12 @@ services:
       - "3000"
     env_file:
       - .env
-    depends_on:
-      - backend
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.frontend.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.frontend.entrypoints=websecure"
+      - "traefik.http.routers.frontend.tls.certresolver=myresolver"
+      - "traefik.http.services.frontend.loadbalancer.server.port=3000"
     networks:
       - go-blog-network
 
@@ -41,44 +49,29 @@ services:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     volumes:
       - mysql-data:/var/lib/mysql
-      - /usr/share/zoneinfo:/usr/share/zoneinfo:ro
     networks:
       - go-blog-network
 
-  nginx:
-    image: nginx:latest
-    container_name: go-blog-nginx
+  traefik:
+    image: traefik:v2.10
+    container_name: go-blog-traefik
+    env_file: .env
+    command:
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false" # 라벨이 있는 컨테이너만 노출
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.myresolver.acme.email=${EMAIL}"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+      - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx/conf.d:/etc/nginx/conf.d
-      - ./nginx/logs:/var/log/nginx
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
-    env_file:
-      - .env
-    environment:
-      - DOMAIN=${DOMAIN}
-      - EMAIL=${EMAIL}
-    entrypoint: >
-      /bin/sh -c "envsubst '$$DOMAIN $$EMAIL' < /etc/nginx/conf.d/nginx.conf.template > /etc/nginx/conf.d/nginx.conf && nginx -g 'daemon off;'"
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./letsencrypt:/letsencrypt
     networks:
       - go-blog-network
-    depends_on:
-      - certbot
-    restart: unless-stopped
-
-  certbot:
-    image: certbot/certbot:latest
-    container_name: go-blog-certbot
-    volumes:
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
-    networks:
-      - go-blog-network
-    restart: unless-stopped
 
 volumes:
   mysql-data:
