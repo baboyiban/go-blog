@@ -1,8 +1,10 @@
 // @ts-check
 import { defineConfig } from "astro/config";
 import { config } from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 
-config({ path: "../.env" });
+config();
 
 // https://astro.build/config
 export default defineConfig({

@@ -8,10 +8,7 @@ build/
 .astro/
 
 # 환경 변수 파일
-.env
-.env.local
-.env.development
-.env.production
+.env*
 
 # 로그 파일
 *.log
