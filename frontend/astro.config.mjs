@@ -1,15 +1,18 @@
-// @ts-check
 import { defineConfig } from "astro/config";
 import { config } from "dotenv";
-import path from "path";
-import { fileURLToPath } from "url";
 
-config();
+// Docker 환경 대응
+try {
+  config({ path: "/app/.env" }); // ← 절대 경로 지정
+} catch (e) {
+  console.log("Local .env loaded");
+}
 
-// https://astro.build/config
 export default defineConfig({
   build: {
-    assetsPrefix: `https://cdn.${process.env.DOMAIN || "localhost"}`,
-    inlineStylesheets: "auto",
+    assetsPrefix:
+      process.env.NODE_ENV === "production"
+        ? `https://cdn.${process.env.DOMAIN}`
+        : undefined,
   },
 });
