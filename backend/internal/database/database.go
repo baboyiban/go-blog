@@ -15,11 +15,6 @@ func ConnectDB() *sql.DB {
 	dbHost := os.Getenv("DB_HOST")
 	dbName := os.Getenv("DB_NAME")
 
-	// 기본값 설정 (환경 변수가 비어 있을 경우)
-	if dbHost == "" {
-		dbHost = "mysql:3306" // 기본값은 Docker 네트워크의 서비스 이름
-	}
-
 	// DSN 구성
 	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?parseTime=true",
 		dbUser, dbPassword, dbHost, dbName)
