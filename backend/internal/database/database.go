@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"os"
+	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -24,16 +25,32 @@ func ConnectDB() *sql.DB {
 		dsn += "&tls=true"
 	}
 
-	db, err := sql.Open("mysql", dsn)
-	if err != nil {
-		panic(err.Error())
+	var db *sql.DB
+	var err error
+	retryCount := 5               // 재시도 횟수 설정
+	retryDelay := 3 * time.Second // 재시도 간 딜레이 설정
+
+	for i := range retryCount {
+		db, err = sql.Open("mysql", dsn)
+		if err != nil {
+			fmt.Printf("데이터베이스 연결 시도 %d 실패 (sql.Open 에러): %v\n", i+1, err)
+			time.Sleep(retryDelay)
+			continue
+		}
+
+		err = db.Ping()
+		if err != nil {
+			fmt.Printf("데이터베이스 연결 시도 %d 실패 (db.Ping 에러): %v\n", i+1, err)
+			if db != nil {
+				db.Close() // Ping 실패 시 연결 닫기 (자원 누수 방지)
+			}
+			time.Sleep(retryDelay)
+			continue
+		}
+
+		fmt.Println("데이터베이스 연결 성공!")
+		return db // 연결 성공 시 DB 객체 반환
 	}
 
-	// 연결 테스트
-	err = db.Ping()
-	if err != nil {
-		panic(fmt.Sprintf("데이터베이스 연결 실패: %v", err))
-	}
-
-	return db
+	panic(fmt.Sprintf("데이터베이스 연결 실패 (최대 재시도 횟수 초과): %v", err)) // 최대 재시도 횟수 초과 시 패닉
 }
