@@ -1,5 +1,9 @@
 certificatesResolvers:
   myresolver:
     acme:
-      caServer: "https://acme-v02.api.letsencrypt.org/directory"
+      caServer: "https://acme-staging-v02.api.letsencrypt.org/directory"
+      email: "${EMAIL}"
+      storage: "/letsencrypt/acme.json"
       keyType: "EC256"
+      httpChallenge:
+        entryPoint: web

@@ -65,6 +65,7 @@ services:
     platform: linux/amd64
     image: traefik:v2.10
     container_name: ssl
+    env_file: .env
     command:
       - --api.dashboard=true
       - --providers.docker=true
