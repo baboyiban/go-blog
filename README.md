@@ -43,6 +43,10 @@ sudo apt-get install docker-compose-plugin
 # minikube 설치
 curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
 sudo install minikube-linux-amd64 /usr/local/bin/minikube
+
+# net-tools 설치
+sudo apt update
+sudo apt install net-tools
 ```
 
 #### 개발 및 배포
