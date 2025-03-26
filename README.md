@@ -54,14 +54,30 @@ docker-compose up -d --build
 # 로그
 docker-compose logs -f
 
+# Docker Hub
+# 빌드
+docker-compose build
+# 캐시 없이 빌드
+docker-compose build --no-cache
+# push
+docker-compose push
+# pull
+docker-compose pull
+
 # 삭제
-docker container prune
-docker image prune -a
-docker volume prune
-docker builder prune --all
+docker container prune # 컨테이너 삭제
+docker image prune -a # 이미지 삭제
+docker volume prune -a # 볼륨 삭제
+docker builder prune --all # 빌더 삭제
+docker system prune -a # 시스템 삭제
 
 # 이미지 push
-docker tag go-blog-backend <your-dockerhub-username>/go-blog-backend:latest
-docker tag go-blog-frontend <your-dockerhub-username>/go-blog-frontend:latest
-docker tag go-blog-mysql <your-dockerhub-username>/go-blog-mysql:latest
+docker tag go-blog-backend:latest chl11wq12/go-blog-backend:v0.1
+docker tag go-blog-frontend:latest chl11wq12/go-blog-frontend:v0.1
+docker tag go-blog-mysql:8.0 chl11wq12/go-blog-mysql:8.0
+docker tag go-blog-traefik:v2.10 chl11wq12/go-blog-traefik:v2.10
+docker push chl11wq12/go-blog-backend:v0.1
+docker push chl11wq12/go-blog-frontend:v0.1
+docker push chl11wq12/go-blog-mysql:8.0
+docker push chl11wq12/go-blog-traefik:v2.10
 ```
