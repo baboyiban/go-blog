@@ -78,6 +78,8 @@ services:
       - --certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web
       - --entrypoints.web.http.redirections.entrypoint.to=websecure
       - --entrypoints.web.http.redirections.entrypoint.scheme=https
+      # Staging 환경 활성화
+      - --certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory
     ports:
       - "80:80"
       - "443:443"
@@ -91,7 +93,7 @@ volumes:
   mysql-data:
     driver: local
   letsencrypt:
-    driver: local # 드라이버 명시 제거 (선택 사항)
+    driver: local
 
 networks:
   go-blog-network:
