@@ -48,7 +48,7 @@ services:
   mysql:
     platform: linux/amd64
     image: mysql:8.0
-    container_name: db
+    container_name: mysql
     env_file:
       - .env
     environment:
@@ -64,7 +64,7 @@ services:
   traefik:
     platform: linux/amd64
     image: traefik:v2.10
-    container_name: ssl
+    container_name: traefik
     environment:
       - EMAIL=${EMAIL} # 명시적으로 환경 변수 정의
     command:
