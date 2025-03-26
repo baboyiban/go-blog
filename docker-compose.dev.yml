@@ -17,6 +17,7 @@ services:
   frontend:
     build:
       context: ./frontend
+      dockerfile: dev.Dockerfile
       target: dev
     container_name: go-blog-frontend-dev
     ports:

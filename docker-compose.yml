@@ -3,7 +3,7 @@ services:
     build:
       context: ./backend
       args:
-        DOMAIN: ${DOMAIN}
+        DOMAIN: ${DOMAIN} # Dockerfile에서 사용할 변수
     container_name: go-blog-backend
     expose:
       - "8080"
@@ -25,6 +25,8 @@ services:
   frontend:
     build:
       context: ./frontend
+      args:
+        DOMAIN: ${DOMAIN}
     container_name: go-blog-frontend
     expose:
       - "3000"
@@ -40,12 +42,15 @@ services:
       - go-blog-network
 
   mysql:
-    build: ./mysql
+    image: mysql:8.0 # 또는 커스텀 Dockerfile 사용
     container_name: go-blog-mysql
-    expose:
-      - "3306"
     env_file:
       - .env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
     volumes:
       - mysql-data:/var/lib/mysql
     networks:
@@ -55,22 +60,24 @@ services:
     image: traefik:v2.10
     container_name: go-blog-traefik
     command:
-      - "--api.dashboard=true"
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false" # 라벨이 있는 컨테이너만 노출
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.websecure.address=:443"
-      - "--certificatesresolvers.myresolver.acme.email=${EMAIL}"
-      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
-      - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
-      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
-      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      - --api.dashboard=true
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      - --certificatesresolvers.myresolver.acme.email=${EMAIL}
+      - --certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json
+      - --certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web
+      - --entrypoints.web.http.redirections.entrypoint.to=websecure
+      - --entrypoints.web.http.redirections.entrypoint.scheme=https
+      - --configFile=/etc/traefik/traefik.yml
     ports:
       - "80:80"
       - "443:443"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./letsencrypt:/letsencrypt
+      - ./traefik.yml:/etc/traefik/traefik.yml
     networks:
       - go-blog-network
 

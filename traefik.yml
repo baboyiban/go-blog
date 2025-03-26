@@ -1,0 +1,5 @@
+certificatesResolvers:
+  myresolver:
+    acme:
+      caServer: "https://acme-v02.api.letsencrypt.org/directory"
+      keyType: "EC256"

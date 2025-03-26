@@ -59,4 +59,9 @@ docker container prune
 docker image prune -a
 docker volume prune
 docker builder prune --all
+
+# 이미지 push
+docker tag go-blog-backend <your-dockerhub-username>/go-blog-backend:latest
+docker tag go-blog-frontend <your-dockerhub-username>/go-blog-frontend:latest
+docker tag go-blog-mysql <your-dockerhub-username>/go-blog-mysql:latest
 ```
