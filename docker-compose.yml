@@ -38,7 +38,7 @@ services:
       - .env
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.frontend.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.frontend.rule=Host(`${DOMAIN}`) && !PathPrefix(`/api`)" # 수정된 라우팅 규칙
       - "traefik.http.routers.frontend.entrypoints=websecure"
       - "traefik.http.routers.frontend.tls.certresolver=myresolver"
       - "traefik.http.services.frontend.loadbalancer.server.port=3000"
@@ -65,7 +65,8 @@ services:
     platform: linux/amd64
     image: traefik:v2.10
     container_name: ssl
-    env_file: .env
+    environment:
+      - EMAIL=${EMAIL} # 명시적으로 환경 변수 정의
     command:
       - --api.dashboard=true
       - --providers.docker=true
@@ -92,7 +93,7 @@ volumes:
   mysql-data:
     driver: local
   letsencrypt:
-    driver: local
+    driver: local # 드라이버 명시 제거 (선택 사항)
 
 networks:
   go-blog-network:
