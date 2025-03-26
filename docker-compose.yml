@@ -47,7 +47,7 @@ services:
 
   mysql:
     platform: linux/amd64
-    image: chl11wq12/goblog-mysql:8.0
+    image: mysql:8.0
     container_name: db
     env_file:
       - .env
@@ -63,7 +63,7 @@ services:
 
   traefik:
     platform: linux/amd64
-    image: chl11wq12/goblog-traefik:v2.10
+    image: traefik:v2.10
     container_name: ssl
     command:
       - --api.dashboard=true
