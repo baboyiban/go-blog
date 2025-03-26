@@ -4,6 +4,8 @@ FROM oven/bun:1.2.5 AS builder
 WORKDIR /app
 COPY package.json bun.lock ./
 RUN bun install --frozen-lockfile
+# serve를 빌드 단계에서 설치
+RUN bun add serve
 
 COPY . .
 RUN bun run build  # 프로덕션 빌드 (dist 생성)
@@ -16,6 +18,7 @@ WORKDIR /app
 COPY --from=builder /app/package.json ./
 # 빌드 결과물만 복사
 COPY --from=builder /app/dist ./dist
+# serve 실행 파일 복사 (필요한 경우)
 
 EXPOSE 3000
 # 빌드된 파일 서빙
