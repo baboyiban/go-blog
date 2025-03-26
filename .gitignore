@@ -27,4 +27,4 @@ Thumbs.db
 coverage/
 
 # SSL 인증서 파일
-certs/
+letsencrypt/acme.json
