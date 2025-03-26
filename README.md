@@ -85,3 +85,8 @@ docker push chl11wq12/go-blog-frontend:v0.1
 docker push chl11wq12/go-blog-mysql:8.0
 docker push chl11wq12/go-blog-traefik:v2.10
 ```
+
+#### 추가 권장사항
+```bash
+chmod 600 letsencrypt/acme.json
+```
