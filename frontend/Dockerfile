@@ -1,16 +1,22 @@
+# syntax=docker/dockerfile:1
+
+# 또는 ARG BUN_VERSION=1.x  같이 기본 버전 설정 (최신 마이너 버전)
+ARG BUN_VERSION=1.2.6
+
 # === 1. 빌드 단계 ===
-FROM oven/bun:1.2.5 AS builder
+FROM oven/bun:${BUN_VERSION} AS builder
 
 WORKDIR /app
 COPY package.json bun.lock ./
 RUN bun install --frozen-lockfile
 
 COPY . .
-RUN bun run build  # 프로덕션 빌드 (dist 생성)
+# 프로덕션 빌드 (dist 생성)
+RUN bun run build
 
 # === 2. 런타임 단계 ===
 # 경량 이미지
-FROM oven/bun:1.2.5-slim
+FROM oven/bun:${BUN_VERSION}-slim
 
 WORKDIR /app
 COPY --from=builder /app/package.json ./
