@@ -81,7 +81,7 @@ services:
   traefik:
     platform: linux/amd64
     container_name: traefik
-    image: traefik:v3.0
+    image: traefik:v3.3.4
     networks:
       - go-blog-network
     env_file:
