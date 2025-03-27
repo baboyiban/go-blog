@@ -57,6 +57,7 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_HOST: "%"
       MYSQL_DEFAULT_AUTHENTICATION_PLUGIN: caching_sha2_password
+      MYSQL_AUTHENTICATION_POLICY: "caching_sha2_password"
     volumes:
       - mysql-data:/var/lib/mysql
       - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -79,8 +80,10 @@ services:
 
   traefik:
     platform: linux/amd64
-    image: traefik:v3.3
     container_name: traefik
+    image: traefik:v3.0
+    networks:
+      - go-blog-network
     env_file:
       - .env
     environment:
@@ -105,8 +108,6 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./letsencrypt:/letsencrypt
-    networks:
-      - go-blog-network
 
 volumes:
   mysql-data:
