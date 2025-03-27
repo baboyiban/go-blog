@@ -1,8 +1,10 @@
 package database
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
+	"log"
 	"os"
 	"time"
 
@@ -25,32 +27,37 @@ func ConnectDB() *sql.DB {
 		dsn += "&tls=true"
 	}
 
-	var db *sql.DB
 	var err error
-	retryCount := 5               // 재시도 횟수 설정
-	retryDelay := 3 * time.Second // 재시도 간 딜레이 설정
+
+	retryCount := 10              // 재시도 횟수 증가
+	retryDelay := 5 * time.Second // 딜레이 증가
 
 	for i := range retryCount {
-		db, err = sql.Open("mysql", dsn)
+		db, err := sql.Open("mysql", dsn)
 		if err != nil {
-			fmt.Printf("데이터베이스 연결 시도 %d 실패 (sql.Open 에러): %v\n", i+1, err)
+			log.Printf("시도 %d: 연결 실패 - %v", i+1, err)
 			time.Sleep(retryDelay)
 			continue
 		}
 
-		err = db.Ping()
-		if err != nil {
-			fmt.Printf("데이터베이스 연결 시도 %d 실패 (db.Ping 에러): %v\n", i+1, err)
-			if db != nil {
-				db.Close() // Ping 실패 시 연결 닫기 (자원 누수 방지)
-			}
+		// 연결 풀 설정 추가
+		db.SetMaxOpenConns(25)
+		db.SetMaxIdleConns(25)
+		db.SetConnMaxLifetime(5 * time.Minute)
+
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+
+		if err := db.PingContext(ctx); err != nil { // Context 사용
+			log.Printf("시도 %d: 핑 실패 - %v", i+1, err)
+			db.Close()
 			time.Sleep(retryDelay)
 			continue
 		}
 
-		fmt.Println("데이터베이스 연결 성공!")
-		return db // 연결 성공 시 DB 객체 반환
+		log.Println("✅ 데이터베이스 연결 성공")
+		return db
 	}
 
-	panic(fmt.Sprintf("데이터베이스 연결 실패 (최대 재시도 횟수 초과): %v", err)) // 최대 재시도 횟수 초과 시 패닉
+	panic(fmt.Sprintf("연결 실패(%d회 재시도): %v", retryCount, err))
 }
