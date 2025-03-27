@@ -91,5 +91,6 @@ docker-compose run frontend bun install
 
 #### 추가 권장사항
 ```bash
-chmod 600 letsencrypt/acme.json
+sudo chmod 600 letsencrypt/acme.json
+sudo chown $USER:$USER letsencrypt/acme.json
 ```
