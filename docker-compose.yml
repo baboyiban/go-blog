@@ -111,7 +111,8 @@ services:
       - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.permanent=true"
-      - "traefik.http.middlewares.auth.basicauth.users=${HTPASSWD_HASH}" # Basic Auth 사용자 설정 (htpasswd 등으로 생성)
+      # Basic Auth 사용자 설정 (htpasswd 등으로 생성)
+      - "traefik.http.middlewares.auth.basicauth.users=${HTPASSWD_HASH}"
 
     networks:
       - goblog-network
