@@ -91,11 +91,10 @@ docker-compose run frontend bun install
 
 #### 추가 권장사항
 ```bash
+# letsencrypt 권한설정
 sudo chmod 600 letsencrypt/acme.json
-sudo chown $USER:$USER letsencrypt/acme.json
 
 # Traefik
-# htpasswd BASEAUTH
-htpasswd -nB username | base64
-echo "$HTPASSWD_ENCODED" | base64 --decode
+# htpasswd
+htpasswd -nB username
 ```
