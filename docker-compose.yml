@@ -105,7 +105,7 @@ services:
       - "traefik.http.routers.http-redirect.entrypoints=web"
       - "traefik.http.routers.http-redirect.middlewares=https-redirect"
       - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
-      - "traefik.http.middlewares.auth.basicauth.users=test:$2y$05$j46YVUh/.t5EczH66ylOYu.6swQ/CeAKRhovSTqPNg2N.POitU2KS" # Basic Auth 사용자 설정 (htpasswd 등으로 생성)
+      - "traefik.http.middlewares.auth.basicauth.users=test:${BASICAUTH}" # Basic Auth 사용자 설정 (htpasswd 등으로 생성)
     networks:
       - goblog-network
 
