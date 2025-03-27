@@ -51,10 +51,10 @@ services:
     image: mysql:8.0
     command: --default-authentication-plugin=mysql_native_password --bind-address=0.0.0.0
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${DB_DATABASE}
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_HOST: "%"
       MYSQL_DEFAULT_AUTHENTICATION_PLUGIN: caching_sha2_password
     volumes:
@@ -70,8 +70,8 @@ services:
           "ping",
           "-h",
           "localhost",
-          "-u${DB_USER}",
-          "-p${DB_PASSWORD}",
+          "-u${MYSQL_USER}",
+          "-p${MYSQL_PASSWORD}",
         ]
       interval: 5s
       timeout: 3s
