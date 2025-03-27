@@ -1,5 +1,7 @@
-# 개발용 빌드
-FROM golang:1.24.1-alpine AS dev
+ARG GO_VERSION=1.24.1
+
+# 개발 빌드
+FROM golang:${GO_VERSION}-alpine AS dev
 WORKDIR /app
 RUN go install github.com/air-verse/air@latest
 COPY go.mod go.sum ./
@@ -9,7 +11,7 @@ EXPOSE 8080
 CMD ["air", "-c", ".air.toml"]
 
 # 프로덕션 빌드
-FROM golang:1.24.1-alpine AS builder
+FROM golang:${GO_VERSION}-alpine AS builder
 WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download

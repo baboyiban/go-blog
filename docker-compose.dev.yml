@@ -13,43 +13,55 @@ services:
       - GIN_MODE=debug
     depends_on:
       - mysql
+    env_file: .env.dev
+    networks:
+      - go-blog-network-dev
 
   frontend:
     build:
       context: ./frontend
-      dockerfile: dev.Dockerfile
       target: dev
     container_name: go-blog-frontend-dev
     ports:
-      - "3000:3000"
+      - "4321:4321"
     volumes:
-      - ./frontend:/app
-      - /app/node_modules
+      - ./frontend:/usr/src/app
+      - node_modules:/usr/src/app/node_modules
     environment:
       - NODE_ENV=development
-      - ASTRO_PORT=3000
-      - HOST=0.0.0.0 # 모든 네트워크 인터페이스에 바인딩
+      - ASTRO_PORT=4321
+      - HOST=0.0.0.0
+    command: ["bun", "run", "dev", "--host"]
     depends_on:
       - backend
+    env_file: .env.dev
+    networks:
+      - go-blog-network-dev
 
   mysql:
-    platform: linux/amd64
-    build: ./mysql
+    build:
+      context: ./mysql
+      dockerfile: Dockerfile.dev
     container_name: go-blog-mysql-dev
     ports:
       - "3306:3306"
     volumes:
       - mysql-data-dev:/var/lib/mysql
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    env_file: .env.dev
+    networks:
+      - go-blog-network-dev
 
 volumes:
   mysql-data-dev:
     driver: local
   go-modules:
+    driver: local
+  node_modules:
     driver: local
 
 networks:

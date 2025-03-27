@@ -84,6 +84,9 @@ docker push chl11wq12/go-blog-backend:v0.1
 docker push chl11wq12/go-blog-frontend:v0.1
 docker push chl11wq12/go-blog-mysql:8.0
 docker push chl11wq12/go-blog-traefik:v2.10
+
+# node_modules 문제
+docker-compose run frontend bun install
 ```
 
 #### 추가 권장사항

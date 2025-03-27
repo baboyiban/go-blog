@@ -14,11 +14,11 @@ func ConnectDB() *sql.DB {
 	dbUser := os.Getenv("DB_USER")
 	dbPassword := os.Getenv("DB_PASSWORD")
 	dbHost := os.Getenv("DB_HOST")
-	dbName := os.Getenv("DB_NAME")
+	dbDATABASE := os.Getenv("DB_DATABASE")
 
 	// DSN 구성
 	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?parseTime=true",
-		dbUser, dbPassword, dbHost, dbName)
+		dbUser, dbPassword, dbHost, dbDATABASE)
 
 	// TLS 설정이 필요한 경우 추가 (옵션)
 	if os.Getenv("DB_USE_TLS") == "true" {

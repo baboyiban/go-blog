@@ -32,7 +32,7 @@ func SetupRouter(db *sql.DB) *gin.Engine {
 }
 
 func setupDevProxy(router *gin.Engine) {
-	target, _ := url.Parse("http://frontend:3000") // 프론트엔드 포트 일치 확인
+	target, _ := url.Parse("http://frontend:4321") // 프론트엔드 포트 일치 확인
 	proxy := httputil.NewSingleHostReverseProxy(target)
 
 	router.NoRoute(func(c *gin.Context) {
