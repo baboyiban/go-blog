@@ -93,4 +93,9 @@ docker-compose run frontend bun install
 ```bash
 sudo chmod 600 letsencrypt/acme.json
 sudo chown $USER:$USER letsencrypt/acme.json
+
+# Traefik
+# htpasswd BASEAUTH
+htpasswd -nB username | base64
+echo "$HTPASSWD_ENCODED" | base64 --decode
 ```
