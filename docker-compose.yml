@@ -49,6 +49,7 @@ services:
   mysql:
     platform: linux/amd64
     image: mysql:8.0
+    container_name: mysql
     command: --default-authentication-plugin=mysql_native_password --bind-address=0.0.0.0
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
@@ -80,30 +81,33 @@ services:
 
   traefik:
     platform: linux/amd64
+    image: traefik:v2.11
     container_name: traefik
-    image: traefik:v2.10
-    networks:
-      - goblog-network
     env_file:
       - .env
     command:
-      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
-      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
       - "--certificatesresolvers.myresolver.acme.email=${EMAIL}"
       - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
       - "--certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web"
-      - "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
+      # - "--certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory" # 프로덕션 환경에서는 주석 처리
     ports:
       - "80:80"
       - "443:443"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./letsencrypt:/letsencrypt
-    restart: unless-stopped
+    labels:
+      - "traefik.http.routers.http-redirect.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.http-redirect.entrypoints=web"
+      - "traefik.http.routers.http-redirect.middlewares=https-redirect"
+      - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.auth.basicauth.users=test:$2y$05$j46YVUh/.t5EczH66ylOYu.6swQ/CeAKRhovSTqPNg2N.POitU2KS" # Basic Auth 사용자 설정 (htpasswd 등으로 생성)
+    networks:
+      - goblog-network
 
 volumes:
   mysql-data:
