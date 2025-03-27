@@ -20,7 +20,7 @@ services:
       - "traefik.http.routers.backend.tls.certresolver=myresolver"
       - "traefik.http.services.backend.loadbalancer.server.port=8080"
     networks:
-      - go-blog-network
+      - goblog-network
     depends_on:
       mysql:
         condition: service_healthy
@@ -44,7 +44,7 @@ services:
       - "traefik.http.routers.frontend.tls.certresolver=myresolver"
       - "traefik.http.services.frontend.loadbalancer.server.port=4321"
     networks:
-      - go-blog-network
+      - goblog-network
 
   mysql:
     platform: linux/amd64
@@ -62,7 +62,7 @@ services:
       - mysql-data:/var/lib/mysql
       - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
-      - go-blog-network
+      - goblog-network
     healthcheck:
       test:
         [
@@ -81,9 +81,9 @@ services:
   traefik:
     platform: linux/amd64
     container_name: traefik
-    image: traefik:v3.3.4
+    image: traefik:v2.10
     networks:
-      - go-blog-network
+      - goblog-network
     env_file:
       - .env
     environment:
@@ -96,12 +96,12 @@ services:
       - --entrypoints.websecure.address=:443
       - --certificatesresolvers.myresolver.acme.email=${EMAIL}
       - --certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json
-      - --providers.docker.network=go-blog-network
+      - --providers.docker.network=goblog-network
       - --entrypoints.web.http.redirections.entrypoint.to=websecure
       - --entrypoints.web.http.redirections.entrypoint.scheme=https
       - --certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web
       # Staging 환경 활성화
-      # - --certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory
+      - --certificatesresolvers.myresolver.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory
     ports:
       - "80:80"
       - "443:443"
@@ -116,5 +116,5 @@ volumes:
     driver: local
 
 networks:
-  go-blog-network:
+  goblog-network:
     driver: bridge
